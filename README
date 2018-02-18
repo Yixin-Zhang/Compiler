@@ -1,0 +1,9 @@
+Assignment 2
+
+Members:
+Weixiang Weng
+Yixin Zhang
+
+We used Bison & Flex to generate our parser and the environment is Mac OS X.
+
+To generate the parser, please first input "g++ -std=c++11 ast.cpp -c", and then input "make kale". To run the parser and parse your file, please input "./kale -emit-ast -o outputfile.txt inputfile.txt". To clear the files it generate, please input "make clean".
