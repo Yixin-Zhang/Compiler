@@ -5,7 +5,7 @@ lex.yy.c: kale.l kale.tab.h
 	flex kale.l
 
 kale: 	lex.yy.c kale.tab.c kale.tab.h
-	g++ -std=c++11 ast.o kale.tab.c lex.yy.c -ll -o kale
+	g++ -std=c++11 ast.cpp kale.tab.c lex.yy.c -ll -o kale
 
 clean:
-	rm -rf ast.o kale.tab.c lex.yy.c kale.tab.h
+	rm -rf ast.o kale.tab.c lex.yy.c kale.tab.h kale
