@@ -1,11 +1,38 @@
-kale.tab.c kale.tab.h: kale.y
-	bison -d kale.y
+LLVMPATH=/Users/yixin/github/compiler/llvm
 
-lex.yy.c: kale.l kale.tab.h
-	flex kale.l
+FLAGS=-I${LLVMPATH}/include -Wno-deprecated-register -std=c++11
 
-kale: 	lex.yy.c kale.tab.c kale.tab.h
-	g++ -std=c++11 ast.cpp kale.tab.c lex.yy.c -ll -o kale
+LLVMCONFIG = ${LLVMPATH}/bin/llvm-config
+CPPFLAGS = `$(LLVMCONFIG) --cppflags` -std=c++11
+LDFLAGS = `$(LLVMCONFIG) --ldflags` -lpthread -ldl -lz -lncurses -rdynamic
+LIBS = `$(LLVMCONFIG) --libs`
+
+
+all: kale_parser
+
+OBJS = parser.o  \
+       codegen.o \
+       main.o    \
+       tokens.o  \
+       corefn.o  \
+	   native.o  \
+
+parser.cpp: parser.y
+	bison -d -o $@ $^
+	
+parser.hpp: parser.cpp
+
+tokens.cpp: tokens.l parser.hpp
+	flex -o $@ $^
+
+%.o: %.cpp
+	g++ -c $(CPPFLAGS) -o $@ $<
+
+kale_parser: $(OBJS)
+	g++ -o $@ $(OBJS) $(LIBS) $(LDFLAGS) ${FLAGS}
+
+test: kale_parser example.txt
+	cat example.txt | ./kale_parser
 
 clean:
-	rm -rf ast.o kale.tab.c lex.yy.c kale.tab.h kale
+	$(RM) -rf parser.cpp parser.hpp tokens.cpp kale_parser $(OBJS)

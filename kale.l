@@ -1,11 +1,14 @@
 %{
-#include <iostream>
-using namespace std;
-#define YY_DECL extern "C" int yylex()
-#include "kale.tab.h" 
-%}
-%%
+#include "kale.tab.h"
 
+#include <iostream>
+#include <string.h>
+
+#define YY_DECL extern "C" int yylex()
+
+%}
+
+%%
 
 "*"           {return TIMES;}
 "/"           {return SLASH;}
@@ -45,9 +48,9 @@ using namespace std;
 
 #[^\n]*\n  		 ;
 [ \t\n]          ;
-[0-9]+(\.[0-9]+)?   { yylval.fval = atof(yytext); return LITERAL;}
-[a-zA-Z_]+[a-zA-Z0-9_]*     { yylval.identifer = strdup(yytext); return IDENTIFER; }
-\"[^"]*\"         { yylval.sval = strdup(yytext); return STRING;}
+[0-9]+(\.[0-9]+)?   {yylval.fval = atof(yytext); return LITERAL;}
+[a-zA-Z_]+[a-zA-Z0-9_]*     {yylval.identifer = strdup(yytext); return IDENTIFER;}
+\"[^"]*\"         {yylval.sval = strdup(yytext); return STRING;}
 .                ;
 %%
 

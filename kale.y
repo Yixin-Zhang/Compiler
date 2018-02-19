@@ -229,7 +229,7 @@ vdecl:
 %%
 
 
-kal_ast_node * kale_parse(char* filename, char* outputfilename) {
+int kale_parse(char* filename) {
   has_run = false;
 
   ofstream ofs(outputfilename);
@@ -238,7 +238,7 @@ kal_ast_node * kale_parse(char* filename, char* outputfilename) {
   // make sure it's valid:
   if (!myfile) {
     cout << "I can't open a kale file!" << endl;
-    return -1;
+    return 0;
   }
   // set flex to read from it instead of defaulting to STDIN:
   yyin = myfile;
@@ -254,9 +254,9 @@ kal_ast_node * kale_parse(char* filename, char* outputfilename) {
 
   if (!has_run) {
     cout << "error: All programs must define exactly one function named 'run' which returns an integer (the program exit status) and takes no arguments." << endl;
-    return NULL;
+    return 0;
   }
-  return root;
+  return 1;
 }
 
 void foutput(kal_ast_node *node, ofstream &ofs, int indent) {
